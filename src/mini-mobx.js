@@ -1,3 +1,5 @@
+import { useRef } from "react"
+
 const globalState = {
     trackingDerivation: null,
     // 是否允许修改状态的开关
@@ -84,7 +86,7 @@ const globalState = {
   class ObservableValue {
       constructor(value) {
         // 通过 deepEnhancer 处理 value 值
-        this.value_ = deepEnhancer(value),
+        this.value_ = deepEnhancer(value)
         this.observers_ = new Set()
       }
 
@@ -147,4 +149,23 @@ const globalState = {
     )
     // 立即执行
     reaction.schedule_()  
+  }
+
+  export function observer(baseComponent) {
+      return (props) => {
+          const admRef = useRef(null)
+          if (!admRef.current) {
+              // 实例化订阅者中介
+              const reaction = new Reaction(
+                  () => {
+                      // 回调函数中执行依赖收集函数
+                      reaction.track(baseComponent)
+                  }
+              )
+              admRef.current = reaction
+          }
+          const reaction = admRef.current
+          // 立即执行
+          reaction.schedule_()
+      }
   }

@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable, observer } from "./mini-mobx"
+import { makeAutoObservable, observer } from "./mini-mobx"
 
 class Timer {
   secondsPassed = 0
