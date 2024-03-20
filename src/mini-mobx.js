@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
 
 const globalState = {
     trackingDerivation: null,
@@ -153,25 +153,24 @@ const globalState = {
 
   export function observer(baseComponent) {
       return (props) => {
+          const [, setState] = useState()
           let renderResult
           const admRef = useRef(null)
           if (!admRef.current) {
               // 实例化订阅者中介
               const reaction = new Reaction(
                   () => {
-                    // 回调函数中执行依赖收集函数
-                    reaction.track(() => {
-                        renderResult = baseComponent(props)
-                        console.log('renderResult', renderResult)
-                    })
+                    // 执行更新
+                    setState(Symbol())
                   }
               )
               admRef.current = reaction
           }
           const reaction = admRef.current
-          // 立即执行
-          reaction.schedule_()
-          console.log('outer')
-          return renderResult
+        // 执行依赖收集函数
+        reaction.track(() => {
+            renderResult = baseComponent(props)
+        })
+        return renderResult
       }
   }
