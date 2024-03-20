@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { makeAutoObservable, observable, observer } from "./mini-mobx"
+
+class Timer {
+  secondsPassed = 0
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+
+  increaseTimer() {
+    this.secondsPassed += 1
+  }
+}
+
+const myTimer = new Timer()
+
+const TimerView = observer(({ timer }) => <span>Seconds passed: {timer.secondsPassed}</span>)
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <TimerView timer={myTimer}></TimerView>
   );
 }
+
+setInterval(() => {
+    myTimer.increaseTimer()
+}, 1000)
 
 export default App;
