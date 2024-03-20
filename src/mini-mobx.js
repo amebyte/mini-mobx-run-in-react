@@ -162,6 +162,7 @@ const globalState = {
                     // 回调函数中执行依赖收集函数
                     reaction.track(() => {
                         renderResult = baseComponent(props)
+                        console.log('renderResult', renderResult)
                     })
                   }
               )
@@ -170,6 +171,7 @@ const globalState = {
           const reaction = admRef.current
           // 立即执行
           reaction.schedule_()
+          console.log('outer')
           return renderResult
       }
   }
