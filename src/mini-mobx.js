@@ -158,8 +158,10 @@ const globalState = {
               // 实例化订阅者中介
               const reaction = new Reaction(
                   () => {
-                      // 回调函数中执行依赖收集函数
-                      reaction.track(baseComponent)
+                    // 回调函数中执行依赖收集函数
+                    reaction.track(() => {
+                        baseComponent(props)
+                    })
                   }
               )
               admRef.current = reaction
